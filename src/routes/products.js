@@ -45,7 +45,7 @@ router.post('/', (req,res)=> {
 
     users.push(product);
 
-    res.status(201).send ('Proucto agregado correctamente')
+    res.status(201).send ('Producto agregado correctamente')
 })
 
 export default router;
