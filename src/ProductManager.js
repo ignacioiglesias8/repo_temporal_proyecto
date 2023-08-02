@@ -7,7 +7,7 @@ class ProductManager{
         this.path = filePath;
     }
 
-    addProduct(title, description, price, thumbnail, code, stock) {
+    async addProduct(title, description, price, thumbnail, code, stock) {
         if (!title || !description || !price || !thumbnail || !code || !stock) {
                 console.error('Todos los campos son obligatorios');
                 return;
@@ -35,7 +35,7 @@ class ProductManager{
 
             const productsData = JSON.stringify(this.products);
             try {
-                fs.writeFileSync(this.path, productsData);
+                await fs.promises.writeFile(this.path, productsData);
             } catch (err) {
                 console.error('Error al guardar los productos en el archivo:', err);
             }
@@ -78,16 +78,16 @@ class ProductManager{
         }
     }
 
-    updateProduct(id, fieldToUpdate, newValue) {
+    async updateProduct(id, fieldToUpdate, newValue) {
       try {
-        const data = fs.readFileSync(this.path, 'utf8');
+        const data = await fs.promises.readFile(this.path, 'utf8');
         const products = JSON.parse(data);
         const productToUpdate = products.find((product) => product.id === id);
   
         if (productToUpdate) {
           productToUpdate[fieldToUpdate] = newValue;
   
-          fs.writeFileSync(this.path, JSON.stringify(products));
+          await fs.promises.writeFile(this.path, JSON.stringify(products));
         } else {
           console.error('Producto no encontrado');
         }
@@ -96,9 +96,9 @@ class ProductManager{
       }
     }
 
-    deleteProduct(id) {
+    async deleteProduct(id) {
       try {
-        const data = fs.readFileSync(this.path, 'utf8');
+        const data = await fs.promises.readFile(this.path, 'utf8');
         const products = JSON.parse(data);
   
         const index = products.findIndex((product) => product.id === id);
@@ -106,7 +106,7 @@ class ProductManager{
           products.splice(index, 1);
   
           const productsData = JSON.stringify(products);
-          fs.writeFileSync(this.path, productsData);
+          await fs.promises.writeFile(this.path, productsData);
         } else {
           console.error('Producto no encontrado');
         }
