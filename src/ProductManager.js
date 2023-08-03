@@ -7,7 +7,7 @@ class ProductManager{
         this.path = filePath;
     }
 
-    async addProduct(title, description, price, thumbnail, code, stock, category) {
+    async addProduct(title, description, price, thumbnail, code, stock, category, status = true) {
         if (!title || !description || !price || !thumbnail || !code || !stock || !category) {
                 console.error('Todos los campos son obligatorios');
                 return;
@@ -34,6 +34,7 @@ class ProductManager{
                 code,
                 stock,
                 category,
+                status,
             };
 
             this.products.push(product);
