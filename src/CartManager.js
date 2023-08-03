@@ -37,7 +37,7 @@ class CartManager {
             }
     }
 
-    async getProductsInCart(id) {
+    async getCartById(id) {
         try {
             const data = await fs.promises.readFile(this.path, 'utf8');
             const carts = JSON.parse(data);

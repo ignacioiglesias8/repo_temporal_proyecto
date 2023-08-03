@@ -1,34 +1,45 @@
 import { Router } from 'express';
 import CartManager from '../CartManager.js';
+import ProductManager from '../ProductManager.js';
 
 const router = Router();
 
 const cartManager = new CartManager('./carrito.json');
+const productManager = new ProductManager('./products.json');
 
 router.post('/', async (req, res) => {
     const cart = await cartManager.createCart();
 
     res.send({ cart });
-});//¿Por qué genera al archivo carrito.js por afuera del src?
+});
 
 router.get('/:cid', async (req, res) => {
     const cartId = parseInt(req.params.cid);
-    const cartProducts = await cartManager.getProductsInCart(cartId);
+    const cartProducts = await cartManager.getCartById(cartId);
     if (!cartProducts) {
         return res.status(404).json({ error: 'Carrito no encontrado' });
     }
     
     res.json(cartProducts);
-});//¿Por qué lee al archivo carrito.js por afuera del src?
+});
 
-    // Ruta para agregar un producto al carrito
 router.post('/:cid/product/:pid', async (req, res) => {
-    const cartId = req.params.cid;
-    const productId = req.params.pid;
-    const quantity = req.body.quantity;
+    const cartId = parseInt(req.params.cid);
+    const productId = parseInt(req.params.pid);
 
-    await cartManager.addProductToCart(cartId, productId, quantity);
-    res.send({ message: 'Producto agregado al carrito correctamente' });
+    const cart = await cartManager.getCartById(cartId);
+        if (!cart) {
+            return res.status(404).send({ error: 'Carrito no encontrado' });
+        }
+
+    const product = await productManager.getProductById(productId);
+        if (!product) {
+            return res.status(404).send({ error: 'Producto no encontrado' });
+        }
+
+        await cartManager.addProductToCart(cartId, productId, 1);
+
+        res.send(cart);
 });
 
 export default router;
