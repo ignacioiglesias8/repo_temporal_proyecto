@@ -13,13 +13,17 @@ class ProductManager{
                 return;
             }
 
+            const data = await fs.promises.readFile(this.path, 'utf8');
+            this.products = JSON.parse(data);
+
             const existingProduct = this.products.find((product) => product.code === code);
                 if (existingProduct) {
                 console.error(`El código "${code}" ya está en uso`);
                 return;
             }
 
-            const id = ++this.lastId;
+            const lastProductId = this.products.length > 0 ? this.products[this.products.length - 1].id : 0;
+            const id = lastProductId + 1;
 
             const product = {
                 id,
