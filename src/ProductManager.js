@@ -7,8 +7,9 @@ class ProductManager{
         this.path = filePath;
     }
 
-    async addProduct(title, description, price, thumbnail, code, stock, category, status = true) {
-        if (!title || !description || !price || !thumbnail || !code || !stock || !category) {
+    async addProduct(title, description, price, thumbnails, code, stock, category, status = true) {
+        if (!title || !description || !price || !code || !stock || !category) {
+          //no se comprende si status también debe ser obligatorio en esta parte
                 console.error('Todos los campos son obligatorios');
                 return;
             }
@@ -25,12 +26,16 @@ class ProductManager{
             const lastProductId = this.products.length > 0 ? this.products[this.products.length - 1].id : 0;
             const id = lastProductId + 1;
 
+            if (typeof thumbnails === 'string') {
+                thumbnails = [thumbnails];
+            }
+
             const product = {
                 id,
                 title,
                 description,
                 price,
-                thumbnail,
+                thumbnails,
                 code,
                 stock,
                 category,
